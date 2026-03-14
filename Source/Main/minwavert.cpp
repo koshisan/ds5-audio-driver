@@ -371,6 +371,29 @@ Return Value:
     m_SystemStreams                     = NULL;
     m_bGfxEnabled                       = FALSE;
     m_pMixFormat                        = NULL;
+
+    // Set default mix format to 4ch QUAD 32-bit 48kHz (what Windows Audio Engine expects)
+    {
+        ULONG cbFormat = sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE);
+        m_pMixFormat = (PKSDATAFORMAT_WAVEFORMATEXTENSIBLE)ExAllocatePool2(POOL_FLAG_NON_PAGED, cbFormat, MINWAVERT_POOLTAG);
+        if (m_pMixFormat) {
+            RtlZeroMemory(m_pMixFormat, cbFormat);
+            m_pMixFormat->DataFormat.FormatSize = cbFormat;
+            m_pMixFormat->DataFormat.MajorFormat = KSDATAFORMAT_TYPE_AUDIO;
+            m_pMixFormat->DataFormat.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+            m_pMixFormat->DataFormat.Specifier = KSDATAFORMAT_SPECIFIER_WAVEFORMATEX;
+            m_pMixFormat->WaveFormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+            m_pMixFormat->WaveFormatExt.Format.nChannels = 4;
+            m_pMixFormat->WaveFormatExt.Format.nSamplesPerSec = 48000;
+            m_pMixFormat->WaveFormatExt.Format.wBitsPerSample = 32;
+            m_pMixFormat->WaveFormatExt.Format.nBlockAlign = 4 * 32 / 8;
+            m_pMixFormat->WaveFormatExt.Format.nAvgBytesPerSec = 48000 * 4 * 32 / 8;
+            m_pMixFormat->WaveFormatExt.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
+            m_pMixFormat->WaveFormatExt.Samples.wValidBitsPerSample = 32;
+            m_pMixFormat->WaveFormatExt.dwChannelMask = 0x33; // KSAUDIO_SPEAKER_QUAD
+            m_pMixFormat->WaveFormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+        }
+    }
     m_pDeviceFormat                     = NULL;
     m_ulMixDrmContentId                 = 0;
     m_pbMuted = NULL;
