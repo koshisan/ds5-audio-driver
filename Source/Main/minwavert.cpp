@@ -1101,18 +1101,37 @@ CMiniportWaveRT::IsFormatSupported
 
     cPinFormats = GetPinSupportedDeviceFormats(_ulPin, &pPinFormats);
 
-    // Debug: log requested format
+    // Debug: log requested format to file
     {
         PWAVEFORMATEX pDbgFmt = reinterpret_cast<PWAVEFORMATEX>(_pDataFormat + 1);
-        DPF(D_TERSE, ("IsFormatSupported: tag=0x%X ch=%d rate=%d align=%d bps=%d cbSize=%d",
-            pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
-            pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample, pDbgFmt->cbSize));
-        if (pDbgFmt->wFormatTag == WAVE_FORMAT_EXTENSIBLE && pDbgFmt->cbSize >= 22) {
-            PWAVEFORMATEXTENSIBLE pDbgExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pDbgFmt);
-            DPF(D_TERSE, ("  validBps=%d chMask=0x%X",
-                pDbgExt->Samples.wValidBitsPerSample, pDbgExt->dwChannelMask));
+        HANDLE hFile = NULL;
+        UNICODE_STRING fileName;
+        OBJECT_ATTRIBUTES oa;
+        IO_STATUS_BLOCK iosb;
+        RtlInitUnicodeString(&fileName, L"\\??\\C:\\Windows\\Temp\\ds5audio_fmt.log");
+        InitializeObjectAttributes(&oa, &fileName, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
+        if (NT_SUCCESS(ZwCreateFile(&hFile, FILE_APPEND_DATA | SYNCHRONIZE, &oa, &iosb, NULL,
+            FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE, FILE_OPEN_IF,
+            FILE_SYNCHRONOUS_IO_NONALERT | FILE_NON_DIRECTORY_FILE, NULL, 0)))
+        {
+            char buf[256];
+            int len = 0;
+            if (pDbgFmt->wFormatTag == WAVE_FORMAT_EXTENSIBLE && pDbgFmt->cbSize >= 22) {
+                PWAVEFORMATEXTENSIBLE pDbgExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pDbgFmt);
+                len = _snprintf(buf, sizeof(buf)-1,
+                    "tag=0x%X ch=%d rate=%lu align=%d bps=%d valid=%d mask=0x%lX fmts=%lu\n",
+                    pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
+                    pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample,
+                    pDbgExt->Samples.wValidBitsPerSample, pDbgExt->dwChannelMask, cPinFormats);
+            } else {
+                len = _snprintf(buf, sizeof(buf)-1,
+                    "tag=0x%X ch=%d rate=%lu align=%d bps=%d fmts=%lu\n",
+                    pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
+                    pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample, cPinFormats);
+            }
+            if (len > 0) ZwWriteFile(hFile, NULL, NULL, NULL, &iosb, buf, len, NULL, NULL);
+            ZwClose(hFile);
         }
-        DPF(D_TERSE, ("  cPinFormats=%d", cPinFormats));
     }
 
     for (UINT iFormat = 0; iFormat < cPinFormats; iFormat++)
