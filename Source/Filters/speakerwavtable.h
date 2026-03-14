@@ -702,15 +702,14 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
         }
     },
 
+
     //-------------------------------------------------
-    // 4ch QUAD: 16-bit, 48 kHz (DualSense Haptic)
+    // 4ch QUAD: 16-bit, 48000 Hz (DualSense Haptic)
     //-------------------------------------------------
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
-            0,
-            0,
-            0,
+            0, 0, 0,
             STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
@@ -725,25 +724,38 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
                 16,                                      // wBitsPerSample
                 sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
             },
-            16,                                         // wValidBitsPerSample
-            KSAUDIO_SPEAKER_QUAD,                       // dwChannelMask
+            16,
+            KSAUDIO_SPEAKER_QUAD,
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
     },
 
     //-------------------------------------------------
-    // 4ch QUAD: 24-bit, 48 kHz (DualSense Haptic)
+    // 4ch QUAD: 24-bit, 48000 Hz (DualSense Haptic)
     //-------------------------------------------------
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
-            0,
-            0,
-            0,
+            0, 0, 0,
             STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                4,
+                48000,
+                48000 * 4 * 24 / 8,
+                4 * 24 / 8,
+                24,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            24,
+            KSAUDIO_SPEAKER_QUAD,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
 
     //-------------------------------------------------
     // 4ch QUAD: 16-bit, 44100 Hz
@@ -797,22 +809,8 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
             KSAUDIO_SPEAKER_QUAD,
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
-    },
-        {
-            {
-                WAVE_FORMAT_EXTENSIBLE,
-                4,                                       // nChannels
-                48000,                                   // nSamplesPerSec
-                48000 * 4 * 24 / 8,                      // nAvgBytesPerSec
-                4 * 24 / 8,                              // nBlockAlign
-                24,                                      // wBitsPerSample
-                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
-            },
-            24,                                         // wValidBitsPerSample
-            KSAUDIO_SPEAKER_QUAD,                       // dwChannelMask
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
-        }
-    },
+    }
+
 };
 
 
