@@ -25,7 +25,7 @@ Abstract:
 // Change bits-per-sample range:
 //
 #define SPEAKER_HOST_MIN_BITS_PER_SAMPLE    16
-#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    24
+#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    32
 
 //
 // Change sample-rate range:
