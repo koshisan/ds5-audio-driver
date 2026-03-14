@@ -24,6 +24,7 @@ Abstract:
 #include "minipairs.h"
 #include <initguid.h>
 #include <devpkey.h>
+#include <ntstrsafe.h>
 
 typedef void (*fnPcDriverUnload) (PDRIVER_OBJECT);
 fnPcDriverUnload gPCDriverUnloadRoutine = NULL;
@@ -429,20 +430,39 @@ Return Value:
 
 
     // Set ContainerId to match DS5Virtual HID driver
-    if (NT_SUCCESS(ntStatus))
+    // Write directly to device registry key before PnP reads it
     {
         static const GUID DS5ContainerId = 
             {0x12345678, 0xD505, 0xD505, {0xD5, 0x05, 0x00, 0xD5, 0xEA, 0x15, 0xE0, 0x00}};
         
-        IoSetDevicePropertyData(
+        HANDLE hKey = NULL;
+        NTSTATUS regStatus = IoOpenDeviceRegistryKey(
             PhysicalDeviceObject,
-            &DEVPKEY_Device_BaseContainerId,
-            0,    // LCID
-            0,    // Flags
-            DEVPROP_TYPE_GUID,
-            sizeof(GUID),
-            (PVOID)&DS5ContainerId
+            PLUGPLAY_REGKEY_DEVICE,
+            KEY_SET_VALUE,
+            &hKey
         );
+        if (NT_SUCCESS(regStatus) && hKey)
+        {
+            UNICODE_STRING valueName;
+            RtlInitUnicodeString(&valueName, L"ContainerID");
+            
+            // Format GUID as string
+            WCHAR guidStr[39]; // {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+            RtlStringCbPrintfW(guidStr, sizeof(guidStr),
+                L"{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+                DS5ContainerId.Data1, DS5ContainerId.Data2, DS5ContainerId.Data3,
+                DS5ContainerId.Data4[0], DS5ContainerId.Data4[1],
+                DS5ContainerId.Data4[2], DS5ContainerId.Data4[3],
+                DS5ContainerId.Data4[4], DS5ContainerId.Data4[5],
+                DS5ContainerId.Data4[6], DS5ContainerId.Data4[7]);
+            
+            ZwSetValueKey(hKey, &valueName, 0, REG_SZ,
+                guidStr, (ULONG)((wcslen(guidStr) + 1) * sizeof(WCHAR)));
+            
+            ZwClose(hKey);
+            DPF(D_TERSE, ("ContainerId set to %S", guidStr));
+        }
     }
 
     return ntStatus;
