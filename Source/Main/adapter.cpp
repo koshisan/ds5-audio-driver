@@ -436,7 +436,7 @@ Return Value:
         
         IoSetDevicePropertyData(
             PhysicalDeviceObject,
-            &DEVPKEY_Device_ContainerId,
+            &DEVPKEY_Device_BaseContainerId,
             0,    // LCID
             0,    // Flags
             DEVPROP_TYPE_GUID,
