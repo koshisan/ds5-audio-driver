@@ -19,7 +19,6 @@ Abstract:
 #include "minwavert.h"
 #include "minwavertstream.h"
 #include "micarraywavtable.h"
-#include <ntstrsafe.h>
 
 #define EFFECTS_LIST_COUNT 2
 
@@ -1102,36 +1101,19 @@ CMiniportWaveRT::IsFormatSupported
 
     cPinFormats = GetPinSupportedDeviceFormats(_ulPin, &pPinFormats);
 
-    // Debug: log requested format to file
+    // Debug: log requested format via DbgPrint (view with DebugView)
     {
         PWAVEFORMATEX pDbgFmt = reinterpret_cast<PWAVEFORMATEX>(_pDataFormat + 1);
-        HANDLE hFile = NULL;
-        UNICODE_STRING fileName;
-        OBJECT_ATTRIBUTES oa;
-        IO_STATUS_BLOCK iosb;
-        RtlInitUnicodeString(&fileName, L"\\??\\C:\\Windows\\Temp\\ds5audio_fmt.log");
-        InitializeObjectAttributes(&oa, &fileName, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
-        if (NT_SUCCESS(ZwCreateFile(&hFile, FILE_APPEND_DATA | SYNCHRONIZE, &oa, &iosb, NULL,
-            FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE, FILE_OPEN_IF,
-            FILE_SYNCHRONOUS_IO_NONALERT | FILE_NON_DIRECTORY_FILE, NULL, 0)))
-        {
-            char buf[256];
-            int len = 0;
-            if (pDbgFmt->wFormatTag == WAVE_FORMAT_EXTENSIBLE && pDbgFmt->cbSize >= 22) {
-                PWAVEFORMATEXTENSIBLE pDbgExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pDbgFmt);
-                RtlStringCbPrintfA(buf, sizeof(buf),
-                    "tag=0x%X ch=%d rate=%lu align=%d bps=%d valid=%d mask=0x%lX fmts=%lu\n",
-                    pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
-                    pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample,
-                    pDbgExt->Samples.wValidBitsPerSample, pDbgExt->dwChannelMask, cPinFormats);
-            } else {
-                RtlStringCbPrintfA(buf, sizeof(buf),
-                    "tag=0x%X ch=%d rate=%lu align=%d bps=%d fmts=%lu\n",
-                    pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
-                    pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample, cPinFormats);
-            }
-            len = (int)strlen(buf); ZwWriteFile(hFile, NULL, NULL, NULL, &iosb, buf, len, NULL, NULL);
-            ZwClose(hFile);
+        if (pDbgFmt->wFormatTag == WAVE_FORMAT_EXTENSIBLE && pDbgFmt->cbSize >= 22) {
+            PWAVEFORMATEXTENSIBLE pDbgExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pDbgFmt);
+            DbgPrint("DS5Audio IsFormatSupported: tag=0x%X ch=%d rate=%lu align=%d bps=%d valid=%d mask=0x%lX fmts=%lu\n",
+                pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
+                pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample,
+                pDbgExt->Samples.wValidBitsPerSample, pDbgExt->dwChannelMask, cPinFormats);
+        } else {
+            DbgPrint("DS5Audio IsFormatSupported: tag=0x%X ch=%d rate=%lu align=%d bps=%d fmts=%lu\n",
+                pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
+                pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample, cPinFormats);
         }
     }
 
