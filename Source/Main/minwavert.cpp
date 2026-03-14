@@ -385,7 +385,7 @@ Return Value:
             m_pMixFormat->WaveFormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
             m_pMixFormat->WaveFormatExt.Format.nChannels = 4;
             m_pMixFormat->WaveFormatExt.Format.nSamplesPerSec = 48000;
-            m_pMixFormat->WaveFormatExt.Format.wBitsPerSample = 32;
+            m_pMixFormat->WaveFormatExt.Format.wBitsPerSample = 16;
             m_pMixFormat->WaveFormatExt.Format.nBlockAlign = 4 * 32 / 8;
             m_pMixFormat->WaveFormatExt.Format.nAvgBytesPerSec = 48000 * 4 * 32 / 8;
             m_pMixFormat->WaveFormatExt.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
