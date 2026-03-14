@@ -1,4 +1,4 @@
-/*++
+﻿/*++
 
 Copyright (c) Microsoft Corporation All Rights Reserved
 
@@ -701,6 +701,64 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
     }
+
+    //-------------------------------------------------
+    // 4ch QUAD: 16-bit, 48 kHz (DualSense Haptic)
+    //-------------------------------------------------
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                4,                                       // nChannels
+                48000,                                   // nSamplesPerSec
+                48000 * 4 * 16 / 8,                      // nAvgBytesPerSec
+                4 * 16 / 8,                              // nBlockAlign
+                16,                                      // wBitsPerSample
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            16,                                         // wValidBitsPerSample
+            KSAUDIO_SPEAKER_QUAD,                       // dwChannelMask
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+
+    //-------------------------------------------------
+    // 4ch QUAD: 24-bit, 48 kHz (DualSense Haptic)
+    //-------------------------------------------------
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                4,                                       // nChannels
+                48000,                                   // nSamplesPerSec
+                48000 * 4 * 24 / 8,                      // nAvgBytesPerSec
+                4 * 24 / 8,                              // nBlockAlign
+                24,                                      // wBitsPerSample
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            24,                                         // wValidBitsPerSample
+            KSAUDIO_SPEAKER_QUAD,                       // dwChannelMask
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
 };
 
 
@@ -904,7 +962,7 @@ KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
         },
 
         // --- KSDATARANGE_AUDIO fields ---
-        2,       // MaximumChannels
+        4,       // MaximumChannels
         8,      // MinimumBitsPerSample
         32,      // MaximumBitsPerSample
         8000,   // MinimumSampleFrequency (48 kHz)

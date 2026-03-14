@@ -1,4 +1,4 @@
-/*++
+﻿/*++
 
 Copyright (c) Microsoft Corporation All Rights Reserved
 
@@ -86,7 +86,7 @@ PCPIN_DESCRIPTOR SpeakerTopoMiniportPins[] =
 static
 KSJACK_DESCRIPTION SpeakerJackDescBridge =
 {
-    KSAUDIO_SPEAKER_STEREO,
+    KSAUDIO_SPEAKER_QUAD,
     JACKDESC_RGB(0xB3,0xC9,0x8C),              // Color spec for green
     eConnTypeUnknown,
     eGeoLocFront,
