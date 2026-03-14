@@ -705,14 +705,14 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 
     //-------------------------------------------------
     //-------------------------------------------------
-    // 32-bit Float, Stereo, 48 kHz (Windows Audio Engine native)
+    // 32-bit PCM, Stereo, 48 kHz (Windows Audio Engine native)
     //-------------------------------------------------
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
             0, 0, 0,
             STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
         {
@@ -727,19 +727,19 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
             },
             32,
             KSAUDIO_SPEAKER_STEREO,
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
     },
 
     //-------------------------------------------------
-    // 32-bit Float, Quad, 48 kHz
+    // 32-bit PCM, Quad, 48 kHz
     //-------------------------------------------------
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
             0, 0, 0,
             STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
         {
@@ -754,7 +754,7 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
             },
             32,
             KSAUDIO_SPEAKER_QUAD,
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
     },
 
@@ -880,13 +880,13 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 static
 MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
 {
-    // 32-bit Float, Stereo, 48 kHz - DEFAULT (Windows Audio Engine native)
+    // 32-bit PCM, Stereo, 48 kHz - DEFAULT (Windows Audio Engine native)
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[24].DataFormat
     },
 
-    // 32-bit Float, Quad, 48 kHz
+    // 32-bit PCM, Quad, 48 kHz
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[25].DataFormat
@@ -1087,16 +1087,7 @@ KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
         384000   // MaximumSampleFrequency (192 kHz)
     },
     {
-        // --- KSDATARANGE header (IEEE Float) ---
-        {
-            sizeof(KSDATARANGE_AUDIO),
-            KSDATARANGE_ATTRIBUTES,
-            0,
-            0,
-            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
-            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
-        },
+
         // --- KSDATARANGE_AUDIO fields ---
         4,       // MaximumChannels
         32,      // MinimumBitsPerSample
@@ -1111,7 +1102,6 @@ static
 PKSDATARANGE SpeakerPinDataRangePointersStream[] =
 {
     PKSDATARANGE(&SpeakerPinDataRangesStream[0]),
-    PKSDATARANGE(&SpeakerPinDataRangesStream[1]),
     PKSDATARANGE(&PinDataRangeAttributeList),
 };
 
