@@ -1148,7 +1148,9 @@ CMiniportWaveRT::IsFormatSupported
 
         PWAVEFORMATEXTENSIBLE pWaveFormatExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pWaveFormat);
         if (pWaveFormatExt->Samples.wValidBitsPerSample != pFormat->WaveFormatExt.Samples.wValidBitsPerSample) { continue; }
-        if (pWaveFormatExt->dwChannelMask != pFormat->WaveFormatExt.dwChannelMask) { continue; }
+        // Relax channel mask: match if nChannels matches (Windows sends different masks for same channel count)
+        if (pWaveFormatExt->dwChannelMask != pFormat->WaveFormatExt.dwChannelMask &&
+            pWaveFormat->nChannels != pFormat->WaveFormatExt.Format.nChannels) { continue; }
         if (!IsEqualGUIDAligned(pWaveFormatExt->SubFormat, pFormat->WaveFormatExt.SubFormat)) { continue; }
 
         ntStatus = STATUS_SUCCESS;
