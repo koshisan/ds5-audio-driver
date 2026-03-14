@@ -383,14 +383,14 @@ Return Value:
             m_pMixFormat->DataFormat.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
             m_pMixFormat->DataFormat.Specifier = KSDATAFORMAT_SPECIFIER_WAVEFORMATEX;
             m_pMixFormat->WaveFormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-            m_pMixFormat->WaveFormatExt.Format.nChannels = 2;
+            m_pMixFormat->WaveFormatExt.Format.nChannels = 4;
             m_pMixFormat->WaveFormatExt.Format.nSamplesPerSec = 48000;
             m_pMixFormat->WaveFormatExt.Format.wBitsPerSample = 16;
             m_pMixFormat->WaveFormatExt.Format.nBlockAlign = 4 * 32 / 8;
             m_pMixFormat->WaveFormatExt.Format.nAvgBytesPerSec = 48000 * 4 * 32 / 8;
             m_pMixFormat->WaveFormatExt.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
             m_pMixFormat->WaveFormatExt.Samples.wValidBitsPerSample = 32;
-            m_pMixFormat->WaveFormatExt.dwChannelMask = KSAUDIO_SPEAKER_STEREO; // KSAUDIO_SPEAKER_QUAD
+            m_pMixFormat->WaveFormatExt.dwChannelMask = KSAUDIO_SPEAKER_QUAD; // KSAUDIO_SPEAKER_QUAD
             m_pMixFormat->WaveFormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
         }
     }
@@ -1172,7 +1172,7 @@ CMiniportWaveRT::IsFormatSupported
         PWAVEFORMATEXTENSIBLE pWaveFormatExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pWaveFormat);
         if (pWaveFormatExt->Samples.wValidBitsPerSample != pFormat->WaveFormatExt.Samples.wValidBitsPerSample) { continue; }
         // Accept only STEREO (0x3) and QUAD (0x33) channel masks
-        if (pWaveFormatExt->dwChannelMask != 0x3) { continue; }
+        if (pWaveFormatExt->dwChannelMask != 0x3 && pWaveFormatExt->dwChannelMask != 0x33) { continue; }
         if (pWaveFormat->nChannels != pFormat->WaveFormatExt.Format.nChannels) { continue; }
         if (!IsEqualGUIDAligned(pWaveFormatExt->SubFormat, pFormat->WaveFormatExt.SubFormat)) { continue; }
 

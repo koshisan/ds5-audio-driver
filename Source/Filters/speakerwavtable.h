@@ -1,34 +1,24 @@
 /*++
-
-Copyright (c) Microsoft Corporation All Rights Reserved
-
 Module Name:
-
     speakerwavtable.h
-
-Abstract:
-
-    Declaration of wave miniport tables for the render endpoints.
-    DualSense Speaker: 16-bit, Stereo, 48kHz ONLY (matching real DS5 USB audio).
+    DualSense Speaker: 16-bit, Quad, 48kHz ONLY.
 --*/
 
 #ifndef _VIRTUALAUDIODRIVER_SPEAKERWAVTABLE_H_
 #define _VIRTUALAUDIODRIVER_SPEAKERWAVTABLE_H_
 
-//=============================================================================
-#define SPEAKER_DEVICE_MAX_CHANNELS         2
-#define SPEAKER_HOST_MAX_CHANNELS           2
+#define SPEAKER_DEVICE_MAX_CHANNELS         4
+#define SPEAKER_HOST_MAX_CHANNELS           4
 #define SPEAKER_HOST_MIN_BITS_PER_SAMPLE    16
 #define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    16
 #define SPEAKER_HOST_MIN_SAMPLE_RATE        48000
 #define SPEAKER_HOST_MAX_SAMPLE_RATE        48000
 #define SPEAKER_MAX_INPUT_SYSTEM_STREAMS    2
 
-//=============================================================================
 static
 KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 {
-    // 16-bit, Stereo, 48 kHz (DualSense USB Speaker format)
+    // 16-bit, Quad, 48 kHz
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
@@ -40,21 +30,20 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
         {
             {
                 WAVE_FORMAT_EXTENSIBLE,
-                2,                                       // nChannels
+                4,                                       // nChannels
                 48000,                                   // nSamplesPerSec
-                48000 * 2 * 16 / 8,                      // nAvgBytesPerSec
-                2 * 16 / 8,                              // nBlockAlign
+                48000 * 4 * 16 / 8,                      // nAvgBytesPerSec
+                4 * 16 / 8,                              // nBlockAlign
                 16,                                      // wBitsPerSample
                 sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
             },
-            16,                                         // wValidBitsPerSample
-            KSAUDIO_SPEAKER_STEREO,                     // dwChannelMask
+            16,
+            KSAUDIO_SPEAKER_QUAD,
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
     },
 };
 
-//=============================================================================
 static
 MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
 {
@@ -64,7 +53,6 @@ MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
     },
 };
 
-//=============================================================================
 static
 PIN_DEVICE_FORMATS_AND_MODES SpeakerPinDeviceFormatsAndModes[] =
 {
@@ -82,7 +70,6 @@ PIN_DEVICE_FORMATS_AND_MODES SpeakerPinDeviceFormatsAndModes[] =
     }
 };
 
-//=============================================================================
 static
 KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
 {
@@ -95,7 +82,7 @@ KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
-        2,       // MaximumChannels
+        4,       // MaximumChannels
         16,      // MinimumBitsPerSample
         16,      // MaximumBitsPerSample
         48000,   // MinimumSampleFrequency
@@ -110,7 +97,6 @@ PKSDATARANGE SpeakerPinDataRangePointersStream[] =
     PKSDATARANGE(&PinDataRangeAttributeList),
 };
 
-//=============================================================================
 static
 KSDATARANGE SpeakerPinDataRangesBridge[] =
 {
@@ -128,16 +114,13 @@ PKSDATARANGE SpeakerPinDataRangePointersBridge[] =
     &SpeakerPinDataRangesBridge[0]
 };
 
-//=============================================================================
 static
 PCPIN_DESCRIPTOR SpeakerWaveMiniportPins[] =
 {
-    // Wave Out Streaming Pin (Renderer)
     {
         SPEAKER_MAX_INPUT_SYSTEM_STREAMS,
         SPEAKER_MAX_INPUT_SYSTEM_STREAMS,
-        0,
-        NULL,
+        0, NULL,
         {
             0, NULL, 0, NULL,
             SIZEOF_ARRAY(SpeakerPinDataRangePointersStream),
@@ -148,7 +131,6 @@ PCPIN_DESCRIPTOR SpeakerWaveMiniportPins[] =
             NULL, 0
         }
     },
-    // Wave Out Bridge Pin (Renderer)
     {
         0, 0, 0, NULL,
         {
@@ -163,14 +145,12 @@ PCPIN_DESCRIPTOR SpeakerWaveMiniportPins[] =
     },
 };
 
-//=============================================================================
 static
 PCCONNECTION_DESCRIPTOR SpeakerWaveMiniportConnections[] =
 {
     { PCFILTER_NODE, KSPIN_WAVE_RENDER3_SINK_SYSTEM, PCFILTER_NODE, KSPIN_WAVE_RENDER3_SOURCE }
 };
 
-//=============================================================================
 static
 PCPROPERTY_ITEM PropertiesSpeakerWaveFilter[] =
 {
@@ -190,22 +170,19 @@ PCPROPERTY_ITEM PropertiesSpeakerWaveFilter[] =
 
 DEFINE_PCAUTOMATION_TABLE_PROP(AutomationSpeakerWaveFilter, PropertiesSpeakerWaveFilter);
 
-//=============================================================================
 static
 PCFILTER_DESCRIPTOR SpeakerWaveMiniportFilterDescriptor =
 {
-    0,                                              // Version
-    &AutomationSpeakerWaveFilter,                   // AutomationTable
-    sizeof(PCPIN_DESCRIPTOR),                       // PinSize
-    SIZEOF_ARRAY(SpeakerWaveMiniportPins),          // PinCount
-    SpeakerWaveMiniportPins,                        // Pins
-    sizeof(PCNODE_DESCRIPTOR),                      // NodeSize
-    0,                                              // NodeCount
-    NULL,                                           // Nodes
-    SIZEOF_ARRAY(SpeakerWaveMiniportConnections),   // ConnectionCount
-    SpeakerWaveMiniportConnections,                 // Connections
-    0,                                              // CategoryCount
-    NULL                                            // Categories
+    0,
+    &AutomationSpeakerWaveFilter,
+    sizeof(PCPIN_DESCRIPTOR),
+    SIZEOF_ARRAY(SpeakerWaveMiniportPins),
+    SpeakerWaveMiniportPins,
+    sizeof(PCNODE_DESCRIPTOR),
+    0, NULL,
+    SIZEOF_ARRAY(SpeakerWaveMiniportConnections),
+    SpeakerWaveMiniportConnections,
+    0, NULL
 };
 
-#endif // _VIRTUALAUDIODRIVER_SPEAKERWAVTABLE_H_
+#endif
