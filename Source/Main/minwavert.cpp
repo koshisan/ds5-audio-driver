@@ -386,8 +386,8 @@ Return Value:
             m_pMixFormat->WaveFormatExt.Format.nChannels = 4;
             m_pMixFormat->WaveFormatExt.Format.nSamplesPerSec = 48000;
             m_pMixFormat->WaveFormatExt.Format.wBitsPerSample = 16;
-            m_pMixFormat->WaveFormatExt.Format.nBlockAlign = 4 * 32 / 8;
-            m_pMixFormat->WaveFormatExt.Format.nAvgBytesPerSec = 48000 * 4 * 32 / 8;
+            m_pMixFormat->WaveFormatExt.Format.nBlockAlign = 4 * 16 / 8;
+            m_pMixFormat->WaveFormatExt.Format.nAvgBytesPerSec = 48000 * 4 * 16 / 8;
             m_pMixFormat->WaveFormatExt.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
             m_pMixFormat->WaveFormatExt.Samples.wValidBitsPerSample = 32;
             m_pMixFormat->WaveFormatExt.dwChannelMask = KSAUDIO_SPEAKER_QUAD; // KSAUDIO_SPEAKER_QUAD
