@@ -19,6 +19,7 @@ Abstract:
 #include "minwavert.h"
 #include "minwavertstream.h"
 #include "micarraywavtable.h"
+#include <ntstrsafe.h>
 
 #define EFFECTS_LIST_COUNT 2
 
@@ -1118,18 +1119,18 @@ CMiniportWaveRT::IsFormatSupported
             int len = 0;
             if (pDbgFmt->wFormatTag == WAVE_FORMAT_EXTENSIBLE && pDbgFmt->cbSize >= 22) {
                 PWAVEFORMATEXTENSIBLE pDbgExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pDbgFmt);
-                len = _snprintf(buf, sizeof(buf)-1,
+                RtlStringCbPrintfA(buf, sizeof(buf),
                     "tag=0x%X ch=%d rate=%lu align=%d bps=%d valid=%d mask=0x%lX fmts=%lu\n",
                     pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
                     pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample,
                     pDbgExt->Samples.wValidBitsPerSample, pDbgExt->dwChannelMask, cPinFormats);
             } else {
-                len = _snprintf(buf, sizeof(buf)-1,
+                RtlStringCbPrintfA(buf, sizeof(buf),
                     "tag=0x%X ch=%d rate=%lu align=%d bps=%d fmts=%lu\n",
                     pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
                     pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample, cPinFormats);
             }
-            if (len > 0) ZwWriteFile(hFile, NULL, NULL, NULL, &iosb, buf, len, NULL, NULL);
+            len = (int)strlen(buf); ZwWriteFile(hFile, NULL, NULL, NULL, &iosb, buf, len, NULL, NULL);
             ZwClose(hFile);
         }
     }
