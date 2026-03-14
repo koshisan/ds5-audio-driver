@@ -25,7 +25,7 @@ Abstract:
 // Change bits-per-sample range:
 //
 #define SPEAKER_HOST_MIN_BITS_PER_SAMPLE    16
-#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    24
+#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    32
 
 //
 // Change sample-rate range:
@@ -704,6 +704,60 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 
 
     //-------------------------------------------------
+    //-------------------------------------------------
+    // 32-bit Float, Stereo, 48 kHz (Windows Audio Engine native)
+    //-------------------------------------------------
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0, 0, 0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                2,
+                48000,
+                48000 * 2 * 32 / 8,
+                2 * 32 / 8,
+                32,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            32,
+            KSAUDIO_SPEAKER_STEREO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+        }
+    },
+
+    //-------------------------------------------------
+    // 32-bit Float, Quad, 48 kHz
+    //-------------------------------------------------
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0, 0, 0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                4,
+                48000,
+                48000 * 4 * 32 / 8,
+                4 * 32 / 8,
+                32,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            32,
+            KSAUDIO_SPEAKER_QUAD,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+        }
+    },
+
     // 4ch QUAD: 16-bit, 48000 Hz (DualSense Haptic)
     //-------------------------------------------------
     {
@@ -1031,7 +1085,25 @@ KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
         32,      // MaximumBitsPerSample
         8000,   // MinimumSampleFrequency (48 kHz)
         384000   // MaximumSampleFrequency (192 kHz)
-    }
+    },
+    {
+        // --- KSDATARANGE header (IEEE Float) ---
+        {
+            sizeof(KSDATARANGE_AUDIO),
+            KSDATARANGE_ATTRIBUTES,
+            0,
+            0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        // --- KSDATARANGE_AUDIO fields ---
+        4,       // MaximumChannels
+        32,      // MinimumBitsPerSample
+        32,      // MaximumBitsPerSample
+        8000,    // MinimumSampleFrequency
+        384000   // MaximumSampleFrequency
+    },
 };
 
 
@@ -1039,6 +1111,7 @@ static
 PKSDATARANGE SpeakerPinDataRangePointersStream[] =
 {
     PKSDATARANGE(&SpeakerPinDataRangesStream[0]),
+    PKSDATARANGE(&SpeakerPinDataRangesStream[1]),
     PKSDATARANGE(&PinDataRangeAttributeList),
 };
 
