@@ -700,7 +700,7 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
             KSAUDIO_SPEAKER_STEREO,
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
         }
-    }
+    },
 
     //-------------------------------------------------
     // 4ch QUAD: 16-bit, 48 kHz (DualSense Haptic)
