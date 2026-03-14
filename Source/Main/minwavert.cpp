@@ -1148,10 +1148,7 @@ CMiniportWaveRT::IsFormatSupported
 
         PWAVEFORMATEXTENSIBLE pWaveFormatExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pWaveFormat);
         if (pWaveFormatExt->Samples.wValidBitsPerSample != pFormat->WaveFormatExt.Samples.wValidBitsPerSample) { continue; }
-        // Accept matching channel mask, or any mask if channel count matches (for 4ch flexibility)
-        if (pWaveFormatExt->dwChannelMask != pFormat->WaveFormatExt.dwChannelMask &&
-            pWaveFormatExt->dwChannelMask != 0 &&
-            pWaveFormat->nChannels <= 2) { continue; }
+        if (pWaveFormatExt->dwChannelMask != pFormat->WaveFormatExt.dwChannelMask) { continue; }
         if (!IsEqualGUIDAligned(pWaveFormatExt->SubFormat, pFormat->WaveFormatExt.SubFormat)) { continue; }
 
         ntStatus = STATUS_SUCCESS;
