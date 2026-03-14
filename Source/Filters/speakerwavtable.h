@@ -703,7 +703,61 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
     },
 
 
+        //-------------------------------------------------
+    // 32-bit PCM, Stereo, 48 kHz
     //-------------------------------------------------
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0, 0, 0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                2,
+                48000,
+                48000 * 2 * 32 / 8,
+                2 * 32 / 8,
+                32,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            32,
+            KSAUDIO_SPEAKER_STEREO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+
+    //-------------------------------------------------
+    // 32-bit PCM, Quad, 48 kHz
+    //-------------------------------------------------
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0, 0, 0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                4,
+                48000,
+                48000 * 4 * 32 / 8,
+                4 * 32 / 8,
+                32,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            32,
+            KSAUDIO_SPEAKER_QUAD,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+
+//-------------------------------------------------
 // 4ch QUAD: 16-bit, 48000 Hz (DualSense Haptic)
     //-------------------------------------------------
     {
