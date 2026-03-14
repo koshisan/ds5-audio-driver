@@ -880,13 +880,13 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 static
 MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
 {
-    // 4ch QUAD: 16-bit, 48 kHz (DualSense Haptic) - DEFAULT
+    // 32-bit Float, Stereo, 48 kHz - DEFAULT (Windows Audio Engine native)
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[24].DataFormat
     },
 
-    // 4ch QUAD: 24-bit, 48 kHz (DualSense Haptic)
+    // 32-bit Float, Quad, 48 kHz
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[25].DataFormat
