@@ -1,7 +1,7 @@
 /*++
 Module Name:
     speakerwavtable.h
-    DualSense Speaker: 16-bit, Quad, 48kHz ONLY.
+    DualSense Speaker: 16-bit only, Stereo + Quad, 48kHz.
 --*/
 
 #ifndef _VIRTUALAUDIODRIVER_SPEAKERWAVTABLE_H_
@@ -18,7 +18,7 @@ Module Name:
 static
 KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 {
-    // 16-bit, Quad, 48 kHz
+    // 0) 16-bit, Stereo, 48 kHz (required fallback)
     {
         {
             sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
@@ -30,11 +30,36 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
         {
             {
                 WAVE_FORMAT_EXTENSIBLE,
-                4,                                       // nChannels
-                48000,                                   // nSamplesPerSec
-                48000 * 4 * 16 / 8,                      // nAvgBytesPerSec
-                4 * 16 / 8,                              // nBlockAlign
-                16,                                      // wBitsPerSample
+                2,
+                48000,
+                48000 * 2 * 16 / 8,
+                2 * 16 / 8,
+                16,
+                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
+            },
+            16,
+            KSAUDIO_SPEAKER_STEREO,
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
+        }
+    },
+
+    // 1) 16-bit, Quad, 48 kHz (DualSense haptic)
+    {
+        {
+            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
+            0, 0, 0,
+            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
+            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
+            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
+        },
+        {
+            {
+                WAVE_FORMAT_EXTENSIBLE,
+                4,
+                48000,
+                48000 * 4 * 16 / 8,
+                4 * 16 / 8,
+                16,
                 sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
             },
             16,
@@ -47,6 +72,12 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 static
 MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
 {
+    // Quad as default
+    {
+        STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
+        &SpeakerHostPinSupportedDeviceFormats[1].DataFormat
+    },
+    // Stereo fallback
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[0].DataFormat
