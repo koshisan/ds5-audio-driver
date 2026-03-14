@@ -774,6 +774,18 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 static
 MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
 {
+    // 4ch QUAD: 16-bit, 48 kHz (DualSense Haptic) - DEFAULT
+    {
+        STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
+        &SpeakerHostPinSupportedDeviceFormats[24].DataFormat
+    },
+
+    // 4ch QUAD: 24-bit, 48 kHz (DualSense Haptic)
+    {
+        STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
+        &SpeakerHostPinSupportedDeviceFormats[25].DataFormat
+    },
+
     // 0) 16-bit, Stereo, 48000 Hz (DVD Quality)
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
