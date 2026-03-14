@@ -1101,6 +1101,20 @@ CMiniportWaveRT::IsFormatSupported
 
     cPinFormats = GetPinSupportedDeviceFormats(_ulPin, &pPinFormats);
 
+    // Debug: log requested format
+    {
+        PWAVEFORMATEX pDbgFmt = reinterpret_cast<PWAVEFORMATEX>(_pDataFormat + 1);
+        DPF(D_TERSE, ("IsFormatSupported: tag=0x%X ch=%d rate=%d align=%d bps=%d cbSize=%d",
+            pDbgFmt->wFormatTag, pDbgFmt->nChannels, pDbgFmt->nSamplesPerSec,
+            pDbgFmt->nBlockAlign, pDbgFmt->wBitsPerSample, pDbgFmt->cbSize));
+        if (pDbgFmt->wFormatTag == WAVE_FORMAT_EXTENSIBLE && pDbgFmt->cbSize >= 22) {
+            PWAVEFORMATEXTENSIBLE pDbgExt = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pDbgFmt);
+            DPF(D_TERSE, ("  validBps=%d chMask=0x%X",
+                pDbgExt->Samples.wValidBitsPerSample, pDbgExt->dwChannelMask));
+        }
+        DPF(D_TERSE, ("  cPinFormats=%d", cPinFormats));
+    }
+
     for (UINT iFormat = 0; iFormat < cPinFormats; iFormat++)
     {
         PKSDATAFORMAT_WAVEFORMATEXTENSIBLE pFormat = &pPinFormats[iFormat];
