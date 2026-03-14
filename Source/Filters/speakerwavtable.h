@@ -25,7 +25,7 @@ Abstract:
 // Change bits-per-sample range:
 //
 #define SPEAKER_HOST_MIN_BITS_PER_SAMPLE    16
-#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    32
+#define SPEAKER_HOST_MAX_BITS_PER_SAMPLE    24
 
 //
 // Change sample-rate range:
@@ -704,61 +704,7 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 
 
     //-------------------------------------------------
-    //-------------------------------------------------
-    // 32-bit PCM, Stereo, 48 kHz (Windows Audio Engine native)
-    //-------------------------------------------------
-    {
-        {
-            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
-            0, 0, 0,
-            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
-            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
-        },
-        {
-            {
-                WAVE_FORMAT_EXTENSIBLE,
-                2,
-                48000,
-                48000 * 2 * 32 / 8,
-                2 * 32 / 8,
-                32,
-                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
-            },
-            32,
-            KSAUDIO_SPEAKER_STEREO,
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
-        }
-    },
-
-    //-------------------------------------------------
-    // 32-bit PCM, Quad, 48 kHz
-    //-------------------------------------------------
-    {
-        {
-            sizeof(KSDATAFORMAT_WAVEFORMATEXTENSIBLE),
-            0, 0, 0,
-            STATICGUIDOF(KSDATAFORMAT_TYPE_AUDIO),
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
-            STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
-        },
-        {
-            {
-                WAVE_FORMAT_EXTENSIBLE,
-                4,
-                48000,
-                48000 * 4 * 32 / 8,
-                4 * 32 / 8,
-                32,
-                sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)
-            },
-            32,
-            KSAUDIO_SPEAKER_QUAD,
-            STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM)
-        }
-    },
-
-    // 4ch QUAD: 16-bit, 48000 Hz (DualSense Haptic)
+// 4ch QUAD: 16-bit, 48000 Hz (DualSense Haptic)
     //-------------------------------------------------
     {
         {
@@ -880,13 +826,13 @@ KSDATAFORMAT_WAVEFORMATEXTENSIBLE SpeakerHostPinSupportedDeviceFormats[] =
 static
 MODE_AND_DEFAULT_FORMAT SpeakerHostPinSupportedDeviceModes[] =
 {
-    // 32-bit PCM, Stereo, 48 kHz - DEFAULT (Windows Audio Engine native)
+    // 4ch QUAD: 16-bit, 48 kHz (DualSense Haptic) - DEFAULT
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[24].DataFormat
     },
 
-    // 32-bit PCM, Quad, 48 kHz
+    // 4ch QUAD: 24-bit, 48 kHz (DualSense Haptic)
     {
         STATIC_AUDIO_SIGNALPROCESSINGMODE_DEFAULT,
         &SpeakerHostPinSupportedDeviceFormats[25].DataFormat
