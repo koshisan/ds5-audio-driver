@@ -904,7 +904,7 @@ KSDATARANGE_AUDIO SpeakerPinDataRangesStream[] =
         },
 
         // --- KSDATARANGE_AUDIO fields ---
-        2,       // MaximumChannels
+        4,       // MaximumChannels
         8,      // MinimumBitsPerSample
         32,      // MaximumBitsPerSample
         8000,   // MinimumSampleFrequency (48 kHz)
