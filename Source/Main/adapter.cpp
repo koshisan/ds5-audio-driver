@@ -1,4 +1,4 @@
-/*++
+﻿/*++
 
 Copyright (c) Microsoft Corporation All Rights Reserved
 
@@ -22,6 +22,8 @@ Abstract:
 #include "definitions.h"
 #include "endpoints.h"
 #include "minipairs.h"
+#include <initguid.h>
+#include <devpkey.h>
 
 typedef void (*fnPcDriverUnload) (PDRIVER_OBJECT);
 fnPcDriverUnload gPCDriverUnloadRoutine = NULL;
@@ -424,6 +426,24 @@ Return Value:
             maxObjects,
             0
         );
+
+
+    // Set ContainerId to match DS5Virtual HID driver
+    if (NT_SUCCESS(ntStatus))
+    {
+        static const GUID DS5ContainerId = 
+            {0x12345678, 0xD505, 0xD505, {0xD5, 0x05, 0x00, 0xD5, 0xEA, 0x15, 0xE0, 0x00}};
+        
+        IoSetDevicePropertyData(
+            PhysicalDeviceObject,
+            &DEVPKEY_Device_ContainerId,
+            0,    // LCID
+            0,    // Flags
+            DEVPROP_TYPE_GUID,
+            sizeof(GUID),
+            (PVOID)&DS5ContainerId
+        );
+    }
 
     return ntStatus;
 } // AddDevice
