@@ -36,7 +36,7 @@ Abstract:
 //
 // Max # of pin instances.
 //
-#define SPEAKER_MAX_INPUT_SYSTEM_STREAMS    1
+#define SPEAKER_MAX_INPUT_SYSTEM_STREAMS    2
 
 //=============================================================================
 //
